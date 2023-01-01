@@ -1,0 +1,108 @@
+23-01-01
+
+1 train psot hist
+	train dataseti kaç histogram var
+	y ekseni adet, x ekseni 0-4 yorum arası 0-7 arası
+2 test için aynısı
+		kalpte yığılım vardı, yardımcı metrik olarak yorum sayısını kullandık
+		overfit i engellemek için
+		kalp 1 ve 1'den büyükler için bu yorum sıklığı çalışmasını yaptık
+		
+1 ve 2 bizim label'ımız olacak, feature'larımızın featurelarımız fotolar ve caption'larımızın
+foto text ikilisi
+foto feature resnet cnn, caption'lar word embedding ile
+
+4: 2. aşama histogram iyileştirmesi, yazılımsal, 1 ve 2'deki çubukların sayısını 8'e böldük, 0 7 arası 0.4 > 0 600+: 7
+	sentence_transformer word embed tbb code yollayacak
+	
+5 ve 6 foto ve caption'ı verince kategorisini tespit eden algoritma
+5 ve 6'da 2 tane metod denendi
+	class odluğu için one_hot_train_label, sonrası softmax ile kategori seçmece
+	problem: overfit ediyor %90'lara yaklaşık train başarısı, test başarısı düşük
+		bunu engellemek için dropout kullanıldı
+	act. func. relu kullanıldı
+	
+	model compile edilirken adam optimizer kullanıldı, sgd'den iyileştirmesi
+	loss hesabı için categorical_crossentroyp kullanıldı
+	metric accuracy
+	train in %20si validation
+	valid ile train shuffle edildi fit ederken
+	yukarıdaki ikisi accuracy'e bak bu yapıldı
+	
+6: 5 gibi başka model denendi unet
+	2048+384 = 2432 foto + comment
+	pca kullanarak 128'e düşürüldü
+	unet class. networkü kullanıldı
+	one_hot kullanıldı
+	128 36'lar karşılıklı simetriden
+	çıktı softmax
+	giriş 128 çıkış 8
+	overfit engellemek için dropout kullanıldı
+	farklı aktivasyonlar denendi sigmoid ek olarak
+	accuracy artırmak adına class ağrılıklarıyla oynandı
+		standart veriseti dengelidir, bizimki dengesiz 1'den bakarsak sapma yüksek
+			kategori element sayıları farklı
+				bunu engellemek için weight'ler kullanıldı
+	devamında categorical_Cross_entropy vs ile model compiler edildi adam
+	early stopping: modeli eğitmeye başladık, overfit etmeye başlarsa bir süre bekliyor
+					bu süre sonunda hala overfit ediyorsa, epoch bitmese de durduruyor
+	en iyisi %25 valid %30 training accuracy'si
+	grafikler: valid'de garip davranıyor, artıyor, align değiller, erken durdurarak
+			   olabildiğince iyi hale getirdik
+3: netilook bozuk image'lar kırıktı, açılmayanlar vs. filtrelendi
+   yolo3 airxxxx image'ı texturize etti, bana gelen blue pattern vs. gibi çıktı
+   kalp>=1
+   text'ler sanitize edildi, tab>space, man>woman, double space remove, space removed
+   mysql'den kalp>=1 olanların comment'lerin sayısı çekildi
+   histogram çekildibin'ler tune edildi 4'e göre
+   image feature'lar resnet50 ile çıktı alındı 2048
+	resnet50 son fc çıkartıldı alındı feature'lar
+	vector embedding 384 boyutunda çıkartıldı
+	2048+384=2432 çıktı alındı
+	unet te 4232 128'e düşürüldü
+	label'lar oluşturuldu
+	sonra model oluşturuldu
+		regresyon
+		class
+		.
+		.
+		tune ops.:
+			.
+			.
+			.
+			.
+			opt select:
+				.
+				.
+				.
+				.
+	> model performansıyla ilgili bilgi tbb'den gelecek
+	
+tbb bugün sent2vec kullanarak deneme yaptı extract vector embed 384 için
+	tüm sentece 784 bir şey oldu, tüm sentence oldu
+	patladı	
+tbb grafikler düzenlenecek, normal nlp koyup karşılaştırma
+tbb hoca test doğruluk oranı sorarsa diye tbb yarın oranı çekecek
+
+tbb foto ve caption
+
+network güncellenecek
+
+6'da valid %40 alındı
+
+glove tarzı neden yetişmedi kısmı
+	hoca sorarsa sent2vec weight'leri eğiteceğiz deriz captioning zamanımızı aldı
+
+bütün image yerine sadece kıyafet olsa sonuç daha iyi olabilirdi
+	turuncu arkaplanda kıyafetleri turuncu sanıyor
+	kıyafet ayıklansa daha yüksek doğruluk olabilirdi
+	
+mysql de kendi datasetimizi oluşturmuş olmamız da önemli bir iş
+
+related works: bir şeyler yazacağız
+bir datasetten capture edip comment'ten metrik çıkartmak novel'timiz
+
+sent2vec weight'leri eğitmek
+
+iki tane sent2vec var
+sent2vec çıktıları alacağız
