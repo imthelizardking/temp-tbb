@@ -1,0 +1,74 @@
+23-01-02:
+
+tbb sunum anlatıyor:
+1-2 gerek yok
+3 gerel yok
+4: bunu da denedik çok iyi olmadı BİR SLAYT yarın loss grafiği
+	unet seçme nedeni biyoloji,tıp, limitli veriseti varken
+		bizimkinde çok çeşit bir çeşitten az olduğu için unet e eğildik
+5: 
+6: alttaki ekran mysql ekranı
+		buradaki bir tane kayıt, postid, 32 comment, heratnum>1 7 burada filtrelenmişler var
+		postid = 001/0000/635/01.jpg e denk geliyor
+			airclothing hazır kodu ile image ı text'e çevirdik airclothing yoloV3 kullanıyor
+			image ı verince text'e çeviriyor DETAYLARINI YOLLAYACAK TBB hazır yazılım
+				böylece veriseti oluşturuldu
+					bu feature'ları oluşturabilmek adına kullandık
+					comment num+ path + image text 3 veri tek dosyada birleştirdik
+7: featureları çıakrtmaya başladık
+		pathleri işaretlemiştik
+			resnet tabanlı modelin classifierı çıkartılmış resnet le feature'ları çıkarttık 2048'lik feature
+				inputu 224x224 output 2048 224x224 resized edildi bunu yazılım
+		6'da elde ettiğimzi text verisetini sentence transformer'a sokup embedding alıp 48'lik çıktı alıp image fatures'la conc ettik
+			2048+48 = ... 'lık test ve train features elde ettik
+				kendimize özel feature setler ouşturuldu
+					adetleri verecek setlerin ekleriz
+8: commentlere karşılık gelen histogramı 8lik diziye böldük labelların sınırları
+	bu sınırlar toplamı histogramı düzlemek için yapıldı > overfitting'den kaçmanın birinci aşaması
+9: test verisi
+	test ve train'deki dağılım şeklen benzer, bunu göstermek için, train verisine benzer olduğunu gösterdik, buna bişey yapmadık
+10: yukarıda verilecek dediğim test
+	train ve test set büyüklükleri
+11: bu verilerle eğitim yapmak
+	prog daki konsept mimari
+	oluşturduğumuz network anlatıldı
+		unet oluşturduk sınırlı veride daha iyi yukarıdaki açıklaması var
+			feature sayısını 128'e düşürdük PCA ile
+		overfitting için (training artarken valid düşüyor)
+			bunun için feature azalttık, dropoput kullandık
+		dense layer, relu kullandık
+			yumuşak geçiş 128 64 32 16
+	en sonda 8 output classficasiton olacak şekilde softmax kullandık
+	verimiz imbalanced olduğu için class'lara weight verdik, yoğunluk 1 az 2 histogram'da yaptığımız çalışmanın 2. aşaması
+12: 3. overfitting için adam optimizer ve stop early kullanıldı
+	val_Accuracy bakarak 10 epoch bekle, eğer valid accuracy artmıyorsa stop early
+	altta epochlardaki doğruluklar var
+13: model acc ve model losss
+	epoch sayısı arttıkça model train acc artıyor ama valid acc ilerlemiyor (verisetiyle alakalı bir durum var bilmiyoruz)
+	loss train için azalıyor ama valid loss azalmıyor beceremedik
+
+captioning başalngıç:
+	büyük resim vs'den sonra
+		stage'leri hatırlatalım
+	veriseti toparlama ana başlığı dataset prep fazı
+	11: networkümüz classfication
+	7: novel olmadığı için hazır kullandık daataset hazırlama kısmında anlatabiliriz
+
+related works:	netilook dataseti kullandık imagenet pretrained resnet kullandık captioning için yoloV3
+				unet dropout feature reduction bunları kullandık
+
+intro
+related
+mimari	
+başlangıç: dataset prep 6,7,8,9 slaytları
+11 12 13 network ve yaptıklarımız 13 en son
+sonra benim kısım suggestion
+
+into related : 1
+büyük resim: 2.5
+veriseti hazırlama: 2.5
+classfication: 2.5
+suggestion: 2.5
+
+captioning tbb'de diğerleri bende
+girişe network resmi koy
